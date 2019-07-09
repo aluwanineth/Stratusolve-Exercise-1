@@ -60,18 +60,6 @@
             </button>
             <div id="TaskList" class="list-group">
                 <!-- Assignment: These are simply dummy tasks to show how it should look and work. You need to dynamically update this list with actual tasks -->
-                <a id="1" href="#" class="list-group-item" data-toggle="modal" data-target="#myModal">
-                    <h4 class="list-group-item-heading">Task Name</h4>
-                    <p class="list-group-item-text">Task Description</p>
-                </a>
-                <a id="2" href="#" class="list-group-item" data-toggle="modal" data-target="#myModal">
-                    <h4 class="list-group-item-heading">Task Name</h4>
-                    <p class="list-group-item-text">Task Description</p>
-                </a>
-                <a id="3" href="#" class="list-group-item" data-toggle="modal" data-target="#myModal">
-                    <h4 class="list-group-item-heading">Task Name</h4>
-                    <p class="list-group-item-text">Task Description</p>
-                </a>
             </div>
         </div>
         <div class="col-md-3">
@@ -83,27 +71,83 @@
 <script type="text/javascript" src="assets/js/jquery-1.12.3.min.js"></script>
 <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+    var currentTaskId = -1;
     $('#myModal').on('show.bs.modal', function (event) {
         var triggerElement = $(event.relatedTarget); // Element that triggered the modal
         var modal = $(this);
         if (triggerElement.attr("id") == 'newTask') {
             modal.find('.modal-title').text('New Task');
             $('#deleteTask').hide();
+            currentTaskId = -1;
         } else {
             modal.find('.modal-title').text('Task details');
             $('#deleteTask').show();
+            currentTaskId = triggerElement.attr("id");
             console.log('Task ID: '+triggerElement.attr("id"));
+            getTask();
         }
     });
     $('#saveTask').click(function() {
         //Assignment: Implement this functionality
-        alert('You clicked save! Now implement this functionality.');
-        $('#myModal').modal('hide');
-    });
+        var taskData = new Object();
+        taskData.id = currentTaskId;
+        taskData.taskName = $("#myModal input#InputTaskName").val();
+        taskData.taskDescription = $("#myModal textarea#InputTaskDescription").val();
+        var taskDataJson = JSON.stringify(taskData);
+        console.log(taskDataJson);
+        $.post('update_task.php',
+            {
+                action: 'save',
+                taskData: taskDataJson
+            },
+            function() {
+                updateTaskList();
+                alert('Save... Id:'+currentTaskId);
+                $('#myModal').modal('hide');
+            }, 
+            "json"		
+            );	  
+        });
     $('#deleteTask').click(function() {
         //Assignment: Implement this functionality
-        alert('You clicked delete! Now implement this functionality.');
-        $('#myModal').modal('hide');
+            var taskData = new Object();
+            taskData.id = currentTaskId;		
+            
+            var taskDataJson = JSON.stringify(taskData);
+            console.log(taskDataJson);
+            $.post('update_task.php',
+            {
+                action: 'delete',
+                taskData: taskDataJson
+            },
+            function() {
+                updateTaskList();
+                alert('Delete... Id:'+currentTaskId);
+                $('#myModal').modal('hide');
+                
+            }, 
+            "json"		
+        );	  
     });
+
+    function updateTaskList() {
+        $.post("list_tasks.php", function( data ) {
+            $( "#TaskList" ).html( data );
+        });
+    }
+
+    function getTask(){
+        var taskData = new Object();
+        taskData.id = currentTaskId;		
+        
+        var taskDataJson = JSON.stringify(taskData);
+        $.post( "update_task.php", { action: 'get_task',taskData: taskDataJson })
+              .done(function( data ) {
+                  $("#myModal input#InputTaskName").val(data[0].TaskName);
+                  $("#myModal textarea#InputTaskDescription").val(data[0].TaskDescription);
+               });
+        
+    }
+    updateTaskList();
 </script>
 </html>
