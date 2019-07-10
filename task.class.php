@@ -46,8 +46,17 @@ class Task {
     protected function LoadFromId($Id = null) {
         if ($Id) {
             // Assignment: Code to load details here...
-            $data= $this->TaskDataSource[$Id];
-            $this->TaskDataSource = json_encode($data, true);
+            $index = $this->Id;
+            $data = file_get_contents('Task_Data.txt');
+            $json_arr = json_decode($data, true);
+
+            $arr_index = array();
+            foreach ($json_arr as $key => $value) {
+                if ($value['TaskId'] ==  $index) {
+                    $arr_index[] = $key;
+                }
+            }
+            json_decode(arr_index, true);
         } else
             return null;
     }
@@ -57,14 +66,12 @@ class Task {
         $index = $this->TaskId; 
         if( $index == -1){
             $this->TaskId = $this->getUniqueId();
-        }
-        $input = array(
-            'TaskId' => $this->TaskId,
-			'TaskName' => $this->TaskName,
-			'TaskDescription' => $this->TaskDescription
-        );
-        if( $index == -1){
-           
+            $input = array(
+                'TaskId' => $this->TaskId,
+                'TaskName' => $this->TaskName,
+                'TaskDescription' => $this->TaskDescription
+            );
+
            $data = file_get_contents('Task_Data.txt');
            $data = json_decode($data);
     
@@ -75,12 +82,17 @@ class Task {
            echo $this->TaskId;  
         }
         else {
-            $this->TaskDataSource[$index] = $input; 
-            $this->TaskDataSource = json_encode($this->TaskDataSource);
-            file_put_contents('Task_Data.txt', $this->TaskDataSource);
-            echo $this->TaskId;  
+            $data = file_get_contents('Task_Data.txt');
+            $json_arr = json_decode($data, true);
+            
+            foreach ($json_arr as $key => $value) {
+                if ($value['TaskId'] == $this->TaskId) {
+                    $json_arr[$key]['TaskName'] = $this->TaskName;
+                    $json_arr[$key]['TaskDescription'] = $this->TaskDescription;
+                }
+            }
+            file_put_contents('Task_Data.txt', json_encode($json_arr));
         }
-		
     }
 
     public function Delete() {
