@@ -12,23 +12,25 @@ if(!isset($_POST['action'])) {
 switch($_POST['action']) {
 	
 	case 'delete':
-        $task = new Task();
         $taskData = json_decode($_POST['taskData']);
+        $task = new Task($taskData->id);
         $task->TaskId = $taskData->id;
-		print $task->Delete();		
+	    $task->Delete();		
     break;
     
     case 'get_task':
-        $task = new Task();
         $taskData = json_decode($_POST['taskData']);
+        $task = new Task($taskData->id);
         $task->TaskId = $taskData->id;
-	    print $task->GetTaskItem();		
+	    $task->GetTaskItem();		
 	break;
 	
 	case 'save':
-        $task = new Task();
         $taskData = json_decode($_POST['taskData']);
-        $task->TaskId = $taskData->id;
+        $task = new Task($taskData->id);
+        if($taskData->id != -1){
+           $task->TaskId = $taskData->id;
+        }
         $task->TaskName = $taskData->taskName;
         $task->TaskDescription = $taskData->taskDescription;
 	    $task->Save();				

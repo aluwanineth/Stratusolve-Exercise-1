@@ -23,8 +23,8 @@ class Task {
         // This function needs to generate a new unique ID for the task
         // Assignment: Generate unique id for the new task
         $this->TaskId = $this->getUniqueId();
-        $this->TaskName = 'New Task';
-        $this->TaskDescription = 'New Description';
+         $this->TaskName = 'New Task';
+         $this->TaskDescription = 'New Description';
         $input = array(
             'TaskId' => $this->TaskId,
 			'TaskName' => $this->TaskName,
@@ -46,43 +46,22 @@ class Task {
     protected function LoadFromId($Id = null) {
         if ($Id) {
             // Assignment: Code to load details here...
-            $index = $this->Id;
             $data = file_get_contents('Task_Data.txt');
             $json_arr = json_decode($data, true);
 
             $arr_index = array();
             foreach ($json_arr as $key => $value) {
-                if ($value['TaskId'] ==  $index) {
-                    $arr_index[] = $key;
+                if ($value['TaskId'] == $Id) {
+                    $arr_index[] = $value;
                 }
             }
-            json_decode(arr_index, true);
+            return $arr_index;
         } else
             return null;
     }
 
     public function Save() {
-        //Assignment: Code to save task here
-        $index = $this->TaskId; 
-        if( $index == -1){
-            $this->TaskId = $this->getUniqueId();
-            $input = array(
-                'TaskId' => $this->TaskId,
-                'TaskName' => $this->TaskName,
-                'TaskDescription' => $this->TaskDescription
-            );
-
-           $data = file_get_contents('Task_Data.txt');
-           $data = json_decode($data);
-    
-           $data[] = $input;
-        
-           $data = json_encode($data, true);
-           file_put_contents('Task_Data.txt', $data);
-           echo $this->TaskId;  
-        }
-        else {
-            $data = file_get_contents('Task_Data.txt');
+        $data = file_get_contents('Task_Data.txt');
             $json_arr = json_decode($data, true);
             
             foreach ($json_arr as $key => $value) {
@@ -92,7 +71,7 @@ class Task {
                 }
             }
             file_put_contents('Task_Data.txt', json_encode($json_arr));
-        }
+            echo "saved";
     }
 
     public function Delete() {
@@ -125,10 +104,11 @@ class Task {
         $arr_index = array();
         foreach ($json_arr as $key => $value) {
             if ($value['TaskId'] ==  $index) {
-                $arr_index[] = $key;
+                $arr_index[] = $value;
             }
         }
-       return json_encode($arr_index, true);
+       return  $arr_index;
+       echo "GetTask";
     }
 }
 ?>

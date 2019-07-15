@@ -142,9 +142,10 @@
         
         var taskDataJson = JSON.stringify(taskData);
         $.post( "update_task.php", { action: 'get_task',taskData: taskDataJson })
-              .done(function( data ) {
-                  $("#myModal input#InputTaskName").val(data[0].TaskName);
-                  $("#myModal textarea#InputTaskDescription").val(data[0].TaskDescription);
+              .success(function(data) {
+                  console.log(data);
+                  $("#myModal input#InputTaskName").val(data.TaskName);
+                  $("#myModal textarea#InputTaskDescription").val(data.TaskDescription);
                });
         
     }
