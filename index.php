@@ -102,11 +102,9 @@
             },
             function() {
                 updateTaskList();
-                alert('Save... Id:'+currentTaskId);
+                //alert('Save... Id:'+currentTaskId);
                 $('#myModal').modal('hide');
-            }, 
-            "json"		
-            );	  
+            });	  
         });
     $('#deleteTask').click(function() {
         //Assignment: Implement this functionality
@@ -122,11 +120,10 @@
             },
             function() {
                 updateTaskList();
-                alert('Delete... Id:'+currentTaskId);
+               // alert('Delete... Id:'+currentTaskId);
                 $('#myModal').modal('hide');
                 
-            }, 
-            "json"		
+            }		
         );	  
     });
 

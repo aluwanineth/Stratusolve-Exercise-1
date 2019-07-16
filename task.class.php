@@ -62,16 +62,16 @@ class Task {
 
     public function Save() {
         $data = file_get_contents('Task_Data.txt');
-            $json_arr = json_decode($data, true);
-            
-            foreach ($json_arr as $key => $value) {
-                if ($value['TaskId'] == $this->TaskId) {
-                    $json_arr[$key]['TaskName'] = $this->TaskName;
-                    $json_arr[$key]['TaskDescription'] = $this->TaskDescription;
-                }
+        $json_arr = json_decode($data, true);
+        
+        foreach ($json_arr as $key => $value) {
+            if ($value['TaskId'] == $this->TaskId) {
+                $json_arr[$key]['TaskName'] = $this->TaskName;
+                $json_arr[$key]['TaskDescription'] = $this->TaskDescription;
             }
-            file_put_contents('Task_Data.txt', json_encode($json_arr));
-            echo "saved";
+        }
+        file_put_contents('Task_Data.txt', json_encode($json_arr));
+        echo "saved";
     }
 
     public function Delete() {
